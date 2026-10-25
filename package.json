@@ -1,0 +1,55 @@
+{
+  "name": "playwright-report-kit",
+  "version": "0.1.0",
+  "description": "Reporter Playwright : rapport HTML lisible, export JUnit pour Xray, notification Teams (Power Automate) et mocks d'API générés depuis un fichier HAR.",
+  "license": "MIT",
+  "author": "samsteeven",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samsteeven/playwright-report-kit.git"
+  },
+  "homepage": "https://github.com/samsteeven/playwright-report-kit#readme",
+  "keywords": [
+    "playwright",
+    "reporter",
+    "junit",
+    "xray",
+    "teams",
+    "power-automate",
+    "har",
+    "mocks"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "prk": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && vitest run",
+    "demo:app": "node demo/app/server.mjs",
+    "demo:test": "playwright test --config demo/playwright.config.ts",
+    "demo:xray": "node tools/mock-xray.mjs",
+    "demo:sink": "node tools/teams-sink.mjs",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.42"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "^22.10.0",
+    "fast-xml-parser": "^5.2.0",
+    "typescript": "~5.9.0",
+    "vitest": "^3.2.0"
+  }
+}
