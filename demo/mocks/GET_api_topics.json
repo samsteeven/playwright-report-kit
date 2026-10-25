@@ -1,0 +1,29 @@
+{
+  "id": "GET_api_topics",
+  "method": "GET",
+  "pathTemplate": "/api/topics",
+  "status": 200,
+  "headers": {
+    "content-type": "application/json; charset=utf-8"
+  },
+  "contentType": "application/json",
+  "source": {
+    "url": "http://127.0.0.1:58885/api/topics",
+    "startedAt": "2026-10-25T21:04:44.573Z",
+    "recordedCalls": 1
+  },
+  "body": [
+    {
+      "id": 1,
+      "label": "Question générale"
+    },
+    {
+      "id": 2,
+      "label": "Problème de paiement"
+    },
+    {
+      "id": 3,
+      "label": "Demande de rendez-vous"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      # Compile le paquet puis lance les tests unitaires et le test d'intégration (vrai Playwright, sans navigateur).
+      - run: npm test
+
+  demo:
+    # Exécute la démo (vrai Chromium) avec le reporter, contre le faux Xray et le récepteur Teams du dépôt.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Démo avec import Xray simulé
+        env:
+          CI: "1"
+          XRAY_BASE_URL: http://127.0.0.1:4400
+          XRAY_CLIENT_ID: demo-id
+          XRAY_CLIENT_SECRET: demo-secret
+          XRAY_PROJECT_KEY: DEMO
+        run: |
+          PORT=4400 node tools/mock-xray.mjs &
+          sleep 2
+          npx playwright test --config demo/playwright.config.ts
+          cat demo/report-kit/xray-result.json
+          grep -q '"tests": 10' demo/report-kit/xray-result.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rapport-demo
+          path: demo/report-kit/

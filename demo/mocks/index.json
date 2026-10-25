@@ -1,0 +1,19 @@
+{
+  "generatedFrom": "contact.har",
+  "mocks": [
+    {
+      "id": "GET_api_topics",
+      "method": "GET",
+      "path": "/api/topics",
+      "status": 200,
+      "file": "GET_api_topics.json"
+    },
+    {
+      "id": "POST_api_contact",
+      "method": "POST",
+      "path": "/api/contact",
+      "status": 201,
+      "file": "POST_api_contact.json"
+    }
+  ]
+}

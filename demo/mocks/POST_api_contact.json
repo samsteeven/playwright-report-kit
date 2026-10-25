@@ -1,0 +1,23 @@
+{
+  "id": "POST_api_contact",
+  "method": "POST",
+  "pathTemplate": "/api/contact",
+  "status": 201,
+  "headers": {
+    "content-type": "application/json; charset=utf-8"
+  },
+  "contentType": "application/json",
+  "source": {
+    "url": "http://127.0.0.1:58885/api/contact",
+    "startedAt": "2026-10-25T21:04:44.896Z",
+    "recordedCalls": 2
+  },
+  "body": {
+    "id": 1,
+    "reference": "CT-0001",
+    "accessToken": "[REDACTED]"
+  },
+  "notes": [
+    "Statuts vus pour cette route : 422, 201 (gardé : 201, option --pick last)."
+  ]
+}

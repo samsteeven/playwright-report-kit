@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact : démonstration</title>
+<style>
+  body{font:16px/1.5 system-ui,sans-serif;max-width:520px;margin:32px auto;padding:0 16px;color:#1b1f24}
+  label{display:block;margin-top:14px;font-weight:600}
+  input,select,textarea{width:100%;padding:8px;font:inherit;border:1px solid #9aa4b0;border-radius:6px;box-sizing:border-box}
+  input[type=checkbox]{width:auto}.check{font-weight:400;display:flex;gap:8px;align-items:center}
+  .error{color:#b42318;font-size:.9rem;min-height:1.2em}
+  button{margin-top:18px;padding:10px 18px;font:inherit;border:0;border-radius:6px;background:#2457c5;color:#fff;cursor:pointer}
+  #confirmation{padding:12px;border:1px solid #1a7f4b;background:#e4f5ec;border-radius:6px}
+</style>
+</head>
+<body>
+<h1>Nous contacter</h1>
+<form id="form" novalidate>
+  <label for="name">Nom</label>
+  <input id="name" name="name" autocomplete="name">
+  <div class="error" id="err-name" role="alert"></div>
+
+  <label for="email">Adresse e-mail</label>
+  <input id="email" name="email" type="email" autocomplete="email">
+  <div class="error" id="err-email" role="alert"></div>
+
+  <label for="topic">Thème</label>
+  <select id="topic" name="topic"><option value="">Chargement…</option></select>
+  <div class="error" id="err-topic" role="alert"></div>
+
+  <label for="message">Message</label>
+  <textarea id="message" name="message" rows="4"></textarea>
+  <div class="error" id="err-message" role="alert"></div>
+
+  <label class="check"><input id="consent" name="consent" type="checkbox"> J'accepte le traitement de mon message</label>
+  <div class="error" id="err-consent" role="alert"></div>
+
+  <button type="submit">Envoyer</button>
+</form>
+<p id="confirmation" role="status" hidden></p>
+<script>
+  var fields = ['name', 'email', 'topic', 'message', 'consent'];
+  var form = document.getElementById('form');
+  var confirmation = document.getElementById('confirmation');
+
+  fetch('/api/topics').then(function (r) { return r.json(); }).then(function (topics) {
+    var select = document.getElementById('topic');
+    select.innerHTML = '<option value="">Choisir…</option>' + topics.map(function (t) {
+      return '<option value="' + t.id + '">' + t.label + '</option>';
+    }).join('');
+  });
+
+  function showErrors(errors) {
+    fields.forEach(function (f) { document.getElementById('err-' + f).textContent = errors[f] || ''; });
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var payload = {
+      name: form.name.value, email: form.email.value, topic: form.topic.value,
+      message: form.message.value, consent: form.consent.checked
+    };
+    // Contrôle côté navigateur pour l'e-mail et le consentement ; le serveur revérifie tout.
+    var local = {};
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) local.email = 'Adresse e-mail invalide.';
+    if (!payload.consent) local.consent = 'Vous devez accepter le traitement de votre message.';
+    if (Object.keys(local).length) { showErrors(local); return; }
+
+    fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().then(function (body) { return { status: r.status, body: body }; }); })
+      .then(function (res) {
+        if (res.status === 201) {
+          showErrors({});
+          form.hidden = true;
+          confirmation.hidden = false;
+          confirmation.textContent = 'Merci, votre message est enregistré sous la référence ' + res.body.reference + '.';
+        } else if (res.status === 422) {
+          showErrors(res.body.errors);
+        } else {
+          showErrors({ message: 'Erreur inattendue, réessayez plus tard.' });
+        }
+      });
+  });
+</script>
+</body>
+</html>
