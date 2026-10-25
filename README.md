@@ -27,11 +27,11 @@ Les deux « faux » serveurs sont dans `tools/` pour que n'importe qui puisse re
 
 ## Installation
 
-Le paquet n'est pas publié sur npm. Depuis GitHub (il se compile à l'installation) :
-
 ```bash
-npm install --save-dev github:samsteeven/playwright-report-kit
+npm install --save-dev playwright-report-kit
 ```
+
+Pré-version `0.1.0` : voir « Ce qui est vérifié » plus haut avant de s'y fier pour Xray et Teams. Pour suivre la branche `main` (le paquet se compile à l'installation) : `npm install --save-dev github:samsteeven/playwright-report-kit`.
 
 Node 20 ou plus. Playwright : testé avec la **1.64.1** seulement (les étiquettes `tag:` demandent la 1.42 ou plus).
 
